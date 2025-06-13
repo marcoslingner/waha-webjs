@@ -1,29 +1,20 @@
-# ---------- Build stage ----------
-FROM node:18 AS build
+# ---------- Runtime + build ----------
+FROM node:18
 
-WORKDIR /src
+# Cria pasta da aplicação
+WORKDIR /app
+
+# Copia package.json e package-lock.json
 COPY package*.json ./
+
+# Instala dependências
 RUN npm install
 
-ADD . /src
-RUN npm run build || true \
-    && [ -d dist ] && find ./dist -name "*.d.ts" -delete || true
+# Copia todo o restante do código
+COPY . .
 
-# ---------- Release stage ----------
-FROM node:18 AS release
-
-# Instalações necessárias para o whatsapp-web.js (chrome + fontes)
-RUN apt-get update && \
-    apt-get install -y wget gnupg && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
-    apt-get update && \
-    apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf && \
-    rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-COPY package.json ./
-COPY --from=build /src .       # <-- copia tudo do estágio build (código + node_modules)
-
+# Porta usada pelo WAHA (mantenha 3000 para combinar com CMD)
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+
+# Comando de inicialização
+CMD ["node", "index.js"]
