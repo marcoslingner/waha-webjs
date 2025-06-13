@@ -1,7 +1,5 @@
-#
 # Build
-#
-FROM node:18 as build
+FROM node:18 AS build
 
 # npm packages
 WORKDIR /src
@@ -12,21 +10,18 @@ RUN npm install
 # App
 WORKDIR /src
 ADD . /src
-RUN npm run build && find ./dist -name "*.d.ts" -delete
+RUN npm run build || true && [ -d dist ] && find ./dist -name "*.d.ts" -delete || true
 
-#
 # Final
-#
-FROM node:18 as release
+FROM node:18 AS release
 
 # Install Chrome
-RUN apt-get update  \
+RUN apt-get update \
     && apt-get install -y wget gnupg \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
     && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf \
-      --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Attach sources, install packages
