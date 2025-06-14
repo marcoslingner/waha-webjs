@@ -1,12 +1,11 @@
 {
-  "name": "nodejs",
+  "name": "waha-webjs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "build": "echo 'no build needed'"
+    "build": "nest build",           // gera ./dist
+    "start": "node dist/main.js"     // inicia a API
   },
   "keywords": [],
   "author": "",
@@ -15,5 +14,8 @@
     "@types/node": "^18.0.6",
     "node-fetch": "^3.2.6",
     "whatsapp-web.js": "^1.19.3"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.2.0"
   }
 }
