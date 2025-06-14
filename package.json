@@ -2,10 +2,10 @@
   "name": "waha-webjs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
-    "build": "nest build",           // gera ./dist
-    "start": "node dist/main.js"     // inicia a API
+    "build": "nest build",            
+    "start": "node dist/main.js"      
   },
   "keywords": [],
   "author": "",
